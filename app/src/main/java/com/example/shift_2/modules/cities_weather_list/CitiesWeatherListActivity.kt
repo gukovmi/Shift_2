@@ -1,29 +1,29 @@
-package com.example.shift_2.modules
+package com.example.shift_2.modules.cities_weather_list
 
 import CurrentWeather
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shift_2.R
-import com.example.shift_2.modules.adapters.WeatherAdapter
+import com.example.shift_2.data.Cities
+import com.example.shift_2.modules.city_weather_details.CityWeatherActivity
 import com.example.shift_2.network.Constants
 import com.example.shift_2.network.WeatherApiClient
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_cities_weather_list.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class CitiesWeatherListActivity : AppCompatActivity() {
     var citiesWeatherList:MutableList<CurrentWeather> = mutableListOf()
-    val citiesId= listOf<Int>(1489425, 5202009, 491422, 2013348, 1486209)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_cities_weather_list)
 
-
-        for (cityId in citiesId) {
+        for (cityId in Cities.citiesId) {
             val call: Call<CurrentWeather> =
                 WeatherApiClient.apiClient.getCurrentWeatherById(Constants.API_KEY, cityId)
             call.enqueue(object : Callback<CurrentWeather> {
@@ -35,32 +35,29 @@ class MainActivity : AppCompatActivity() {
                     call: Call<CurrentWeather>,
                     response: Response<CurrentWeather>
                 ) {
-                    Toast.makeText(this@MainActivity, response!!.body()?.name, Toast.LENGTH_LONG).show()
-
-                    val cityWeather = response!!.body()
-                    Log.i("cityWeather", cityWeather.toString())
+                    val cityWeather = response.body()
 
                     cityWeather?.let { citiesWeatherList.add(it) }
                     check()
                 }
-            }
-            )
+            })
         }
     }
+
     private fun weatherItemClicked(currentWeather: CurrentWeather) {
-        ///nextSteps
+        val intent= Intent(this, CityWeatherActivity::class.java)
+        intent.putExtra("currentWeather", currentWeather)
+        startActivity(intent)
     }
+
     private fun check() {
-        if (citiesWeatherList.size==5)
+        if (citiesWeatherList.size==Cities.citiesId.size)
         {
-            for (city in citiesWeatherList) {
-                Log.i("CITY", city.name)
-                Log.i("CITY", citiesWeatherList.size.toString())
-            }
             val recyclerView = weather_recycler_view
             recyclerView.layoutManager= LinearLayoutManager(this)
             recyclerView.adapter =
-                WeatherAdapter(citiesWeatherList,
+                CitiesWeatherListAdapter(
+                    citiesWeatherList,
                     R.layout.list_item_weather,
                     { currentWeather: CurrentWeather -> weatherItemClicked(currentWeather) })
         }

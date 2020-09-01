@@ -1,7 +1,6 @@
-
+import java.io.Serializable
 
 data class CurrentWeather (
-
 	val coord : Coord,
 	val weather : List<Weather>,
 	val base : String,
@@ -14,4 +13,4 @@ data class CurrentWeather (
 	val id : Int,
 	val name : String,
 	val cod : Int
-)
+): Serializable

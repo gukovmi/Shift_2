@@ -1,4 +1,4 @@
-package com.example.shift_2.modules.adapters
+package com.example.shift_2.modules.cities_weather_list
 
 import CurrentWeather
 import android.view.LayoutInflater
@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.list_item_weather.view.*
 import java.math.BigDecimal
 
-class WeatherAdapter (private val citiesWeatherlist: List<CurrentWeather>,
-                     private val rowLayout: Int,
-                     val clickListener: (CurrentWeather) -> Unit
-): RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
+class CitiesWeatherListAdapter (private val citiesWeatherlist: List<CurrentWeather>,
+                                private val rowLayout: Int,
+                                val clickListener: (CurrentWeather) -> Unit
+): RecyclerView.Adapter<CitiesWeatherListAdapter.WeatherViewHolder>() {
 
     class WeatherViewHolder(v: View): RecyclerView.ViewHolder(v) {
 
